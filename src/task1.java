@@ -1,5 +1,5 @@
 public class task1 {
-    public static void main(){
+    public static void main(String[]args){
         System.out.println("remainder: " + remainder(3,4));
         System.out.println("triArea: " + triArea(7,4));
         System.out.println("animals: " + animals(1,2,3));
