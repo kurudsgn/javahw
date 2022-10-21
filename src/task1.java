@@ -51,6 +51,6 @@ public class task1 {
         return sum;
     }
     public static boolean abcmath(int a, int b, int c){
-        return a * (b + 1) % c == 0;
+        return a * Math.pow(2,b) % c == 0;
     }
 }
