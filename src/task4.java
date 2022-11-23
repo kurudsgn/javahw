@@ -12,7 +12,7 @@ public class task4 {
         System.out.println(overTime(13.25, 15, 30, 1.5));
         System.out.println(BMI("205 pounds", "73 inches"));
         System.out.println(bugger(999));
-        System.out.println(toStarShorthand("77777ceff"));
+        System.out.println(toStarShorthand("aaaabaaaa"));
         System.out.println(doesRhyme("Sam I am!", "Green eggs and HAM."));
         System.out.println(trouble(123444,12344455));
         System.out.println(countUniqueBooks("$AA$BBCATT$C$$B$", '$'));
@@ -63,8 +63,7 @@ public class task4 {
         for (int i = 1; i< words.length;i++){
 
             String elm = words[i];
-            int asci = elm.charAt(0);
-            ans += (char) (asci-32) + elm.substring(1);
+            ans += (char) (elm.charAt(0)-32) + elm.substring(1);
         }
         return ans;
     }
@@ -73,17 +72,16 @@ public class task4 {
         for (int i = 0; i < a.length(); i++){
             int chr = a.charAt(i);
             if( chr <=122 && chr >=97){
-                ans += (char) chr;
+                ans += a.charAt(i);
             }
             else {
-                ans += "_" + (char) (chr+32);
+                ans += "_" + (char) (a.charAt(i)+32);
             }
         }
         return ans;
     }
     public static String overTime(double start, double end, double pay, double mult){
         double sum;
-        DecimalFormat dF = new DecimalFormat( "#.##" );
         if (end <= 17){
             sum = pay*(end-start);
         }
@@ -101,16 +99,15 @@ public class task4 {
         double w = Double.parseDouble(weight.substring(0,weight.indexOf(" ")));
         double h = Double.parseDouble(height.substring(0,weight.indexOf(" ")));
         if (weight.contains("pound")){
-            w = w * 0.45;
+            w = w * 0.453592;
         }
         if (height.contains("inch")){
             h = h * 0.0254;
         }
         double imt = w/(h*h);
-        DecimalFormat dF = new DecimalFormat( "#.#" );
-        if (imt < 18.5){return dF.format(imt) + " Underweight";}
-        else if (imt >= 18.5 && imt <= 24.9){return dF.format(imt) + " Normal weight";}
-        else {return dF.format(imt) + " Overweight";}
+        if (imt < 18.5){return String.format("%.1f",imt) + " Underweight";}
+        else if (imt >= 18.5 && imt <= 24.9){return String.format("%.1f",imt) + " Normal weight";}
+        else {return String.format("%.1f",imt) + " Overweight";}
     }
     public static int bugger(int a){
         int ans = 0;
@@ -129,54 +126,31 @@ public class task4 {
             }
         }
     }
-//    public static String toStarShorthand(String a){
-//        String ans = "";
-//        if (a.length()==0) return "";
-//        while (a != ""){
-//            char chr = a.charAt(0);
-//            if (a.length()==1){
-//                ans += chr;
-//            }
-//            else {
-//                int cnt = 0;
-//                for (int i = 0; i < a.length(); i++) {
-//                    if (a.charAt(i) == chr) cnt++;
-//                }
-//                if (cnt > 1) {
-//                    ans += chr + "*" + cnt;
-//                } else {
-//                    ans += chr;
-//                }
-//            }
-//            a = a.replaceAll(String.valueOf(chr), "");
-//        }
-//        return ans;
-//    }
     public static String toStarShorthand(String a){
+        int cnt = 1;
         String ans = "";
-        ArrayList<Integer> chars = new ArrayList<>();
-        for (int i = 0; i< a.length(); i++){
-            if (!chars.contains((int) a.charAt(i))){
-                chars.add((int) a.charAt(i));
+        for (int i = 1; i< a.length();i++){
+            if (a.charAt(i-1) == a.charAt(i)){
+                cnt+=1;
+            }
+            else {
+                if (cnt==1){
+                    ans+=a.charAt(i-1);
+                }
+                else ans+=a.charAt(i-1)+"*"+cnt;
+                cnt = 1;
             }
         }
-        for (int i = 0; i < chars.size(); i++){
-            int cnt = 0;
-            for (int j = 0; j < a.length(); j++) {
-                if ((int)a.charAt(j) == chars.get(i)) cnt++;
-            }
-            int currchar = chars.get(i);
-            if (cnt > 1) {
-                ans += (char) currchar + "*" + cnt;
-            }
-            else ans += (char) currchar;
+        if (cnt==1){
+            ans+=a.charAt(a.length()-1);
         }
+        else ans+=a.charAt(a.length()-1)+"*"+cnt;
         return ans;
     }
     public static boolean doesRhyme(String a, String b){
         String glasn = "aeiouyAEIOUY";
-        String lastA = a.split(" ")[a.split(" ").length-1];
-        String lastB = b.split(" ")[b.split(" ").length-1];
+        String lastA = a.split(" ")[a.split(" ").length-1].toLowerCase();
+        String lastB = b.split(" ")[b.split(" ").length-1].toLowerCase();
         ArrayList <Character> chars1 = new ArrayList<>();
         ArrayList <Character> chars2 = new ArrayList<>();
         for (int i = 0; i < lastA.length(); i++){
@@ -189,14 +163,7 @@ public class task4 {
                 chars2.add(lastB.charAt(i));
             }
         }
-        boolean flag = true;
-        for (int i = 0; i<chars1.size();i++){
-            if (chars1.get(i)!=chars2.get(i) && (int)chars1.get(i)-32!=(int)chars2.get(i) && (int)chars1.get(i)!=(int)chars2.get(i)-32){
-                flag = false;
-                break;
-            }
-        }
-        return flag;
+        return chars1.equals(chars2);
     }
     public static boolean trouble(int a, int b){
         Set<Integer> allnums = new HashSet<>();
@@ -229,14 +196,12 @@ public class task4 {
             }
             if (flag1) {
                 a1=sec.charAt(0);
-                a2=sec.charAt(1);
-                for (int j = 2; j < sec.length(); j++) {
-                    if (a1 == a2 && a2 == sec.charAt(j) && a1 == curr) {
+                for (int j = 1; j < sec.length(); j++) {
+                    if (a1 == sec.charAt(j) && a1 == curr) {
                         flag2 = true;
                         break;
                     }
-                    a1 = a2;
-                    a2 = sec.charAt(j);
+                    a1 = sec.charAt(j);
                 }
                 return flag2;
             }
@@ -246,9 +211,7 @@ public class task4 {
     public static int countUniqueBooks(String a, char b){
         Set<Integer> uniqueBooks = new HashSet<>();
         while (a.indexOf(b,a.indexOf(b)+1)!=-1){
-
             if (a.indexOf(b, a.indexOf(b)+1)-a.indexOf(b)>1) {
-
                 for (int i = a.indexOf(b)+1; i < a.indexOf(b, a.indexOf(b)+1); i++) {
 
                     uniqueBooks.add((int) a.charAt(i));
@@ -258,4 +221,23 @@ public class task4 {
         }
         return uniqueBooks.size();
     }
+    /*String ans = "";
+    ArrayList<Integer> chars = new ArrayList<>();
+        for (int i = 0; i< a.length(); i++){
+        if (!chars.contains((int) a.charAt(i))){
+            chars.add((int) a.charAt(i));
+        }
+    }
+        for (int i = 0; i < chars.size(); i++){
+        int cnt = 0;
+        for (int j = 0; j < a.length(); j++) {
+            if ((int)a.charAt(j) == chars.get(i)) cnt++;
+        }
+        int currchar = chars.get(i);
+        if (cnt > 1) {
+            ans += (char) currchar + "*" + cnt;
+        }
+        else ans += (char) currchar;
+    }
+        return ans;*/
 }
