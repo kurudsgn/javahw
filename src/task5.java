@@ -1,7 +1,8 @@
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Objects;
 
 public class task5 {
     public static void main(String[] args){
@@ -13,6 +14,7 @@ public class task5 {
         System.out.println(sameVowelGroup(new String[]{"toe", "ocelot", "maniac"}));
         System.out.println(validateCard("1234567890123452"));
         System.out.println(numToEng(126));
+        System.out.println(getSha256Hash("password123"));
         System.out.println(correctTitle("jOn SnoW, kINg IN thE noRth."));
         System.out.println(hexLattice(7));
     }
@@ -182,6 +184,25 @@ public class task5 {
             }
         }
         return ans;
+    }
+    private static String getSha256Hash(String s) {
+        try {
+            // шифруем в байты строку через MessageDigest
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(s.getBytes(StandardCharsets.UTF_8));
+            // переводим байты в хеш
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (Exception e) {
+            return null;
+        }
     }
     public static String hexLattice(int a){
         double n = (3+ Math.sqrt(12*a-3))/6;
